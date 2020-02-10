@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}THIS IS THE SURVEY{%endblock title %}
+
+{%block content%}
+<head>
+    <!--For jquery-->
+    <!--<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+    </script>-->
+    <!--For Vue JS-->
+    <script src ="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+</head>
+<body>
+<h1>This is the Survey Page</h1>
+<h1>Choose your top 3 priorities of these 5 to focus on.</h1>
+<div id = 'data'>
+<input class="single-checkbox"type="checkbox" name="goal" value="health" @click='checkCount'/>Health<br />
+<input class="single-checkbox" type="checkbox" name="goal" value="career" />Career<br />
+<input class="single-checkbox" type="checkbox" name="goal" value="social" />Social<br />
+<input class="single-checkbox" type="checkbox" name="goal" value="mindset" />Mindset<br/>
+<input class="single-checkbox" type="checkbox" name="goal" value="edu" />Education<br/>
+<button type = 'button' @click="storePri">Submit Priorities</button>
+<li v-repeat="prio">
+    [[$value]]
+  </li>
+</ul>
+
+</div>
+
+<script>//jquery code to ensure no more than 3 priorities are set. Set at end so attributes can load
+    //$('.single-checkbox').on('change', function() {
+      // if($('.single-checkbox:checked').length > 3) {
+        //   this.checked = false;
+     //  }
+    //});
+    //a vue instance to access the 3 selected options
+    vm = new Vue({
+        el: '#data',
+        data: {
+            //list to store priorities
+            prio: []
+                    },
+        delimiters: ["[[","]]"],
+        methods: {
+            
+
+            //storePri = function(){
+                //iterate over checked priorities, move to view list object
+              //  for(i=0; i<= $('.single-checkbox:checked').length; i++){
+             //       this.prio.push($('.sinlge-checkbox:checked')[i])
+             //   }
+
+            }
+
+        }
+
+    })
+</script>
+</body>
+{% endblock content %}
