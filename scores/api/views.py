@@ -49,3 +49,21 @@ class IndividualScoreListView(generics.ListAPIView):
         #only select scores for this user's goals
         return IndividualScore.objects.filter(goal__in = goals)
 
+#A list view of the scores to see all scores accumulated by a user
+class TotalScoreListView(generics.ListAPIView):
+    serializer_class = TotalScoreSerializer
+    permission_classes = [IsAuthenticated]
+    #the query set is all scores corosponding to goals set by the user
+    def get_queryset(self):
+        #the user
+        user = self.request.user
+        #the users goals
+        goals = list(Goal.objects.filter(user = user))
+        #a list of all individual scores
+        scores_ = IndividualScore.objects.filter(goal__in = goals)
+        #use individual scores to get total scores
+        total_scores = TotalScore.objects.filter(id__in=scores_.values('total_score_id'))
+        #return the queryset
+        return total_scores
+
+

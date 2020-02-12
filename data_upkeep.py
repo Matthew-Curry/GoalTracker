@@ -23,7 +23,6 @@ def makeScores(user_):
     day = datetime.datetime.now(tz = timezone('US/Eastern')).weekday()
     #current date
     today = datetime.datetime.now(tz = timezone('US/Eastern'))
-    print(today)
     #the queryset holding all goals for the day
     query_set = None
     #variable that will hold the total score today
@@ -62,4 +61,11 @@ def updateDataBase():
     for user in users:
         makeScores(user)
 
-updateDataBase()
+#update the database every day at 12 AM
+schedule.every().day.at('00:00').do(updateDataBase, 'Start of the day')
+
+#An infinite loop to keep the updates consistent
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+
