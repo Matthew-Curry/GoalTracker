@@ -1,4 +1,5 @@
-#File to update Admin User Creation and User change forms
+'''File to update Admin User Creation and User change forms'''
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 

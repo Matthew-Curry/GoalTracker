@@ -1,6 +1,4 @@
-#create individual scores for a given goal
-
-#view total scores for a given goal
+'''The relevant views for the Individual Score and Total Score'''
 
 #import generic api views
 from rest_framework import generics
@@ -32,7 +30,6 @@ class IndividualScoreUpdateView(generics.RetrieveUpdateAPIView):
         today = datetime.today()
         #list of goals created today
         total_score_today = TotalScore.objects.filter(date = today)
-        print(total_score_today)
         #only select scores made by this user today
         return IndividualScore.objects.filter(goal__in=goals, total_score__in= total_score_today)
     
@@ -40,7 +37,7 @@ class IndividualScoreUpdateView(generics.RetrieveUpdateAPIView):
 class IndividualScoreListView(generics.ListAPIView):
     serializer_class = IndividualScoreSerializer
     permission_classes = [IsAuthenticated]
-    #the query set is all scores corosponding to goals set by the uset
+    #the query set is all scores corosponding to goals set by the user
     def get_queryset(self):
         #the user
         user = self.request.user

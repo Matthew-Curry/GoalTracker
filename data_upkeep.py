@@ -1,4 +1,5 @@
-#####################a script including functions used by the backend#############################
+'''A script that automates the creation of a new Total Score object and Individual Score objects for each User at the start of each day'''
+
 #need to include django enviroment to use models
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "goal_project.settings")

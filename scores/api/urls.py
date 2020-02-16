@@ -1,4 +1,5 @@
-###########The Urls.py for the score api#############
+'''The Urls.py for the score API'''
+
 #the path function
 from django.urls import path
 #import the views tied to scores

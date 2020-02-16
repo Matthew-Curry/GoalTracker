@@ -1,3 +1,5 @@
+'''The URLs for the goals API'''
+
 #import path function
 from django.urls import path
 #import appropriate views

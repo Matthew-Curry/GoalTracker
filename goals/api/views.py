@@ -1,3 +1,5 @@
+'''Views for the Goals API'''
+
 #base classes to construct the views
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404

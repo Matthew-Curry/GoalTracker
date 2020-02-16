@@ -1,3 +1,5 @@
+'''The admin settings for the accounts app. Needs to be reconfigured because there is a custom user model'''
+#to get the register function
 from django.contrib import admin
 #to help create our custom admin
 from django.contrib.auth.admin import UserAdmin

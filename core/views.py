@@ -1,6 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 #imports for the dummy view
+#NOT SURE IF KEEPING/IF TEMPLATE VIEW IS STILL RELEVANT
+
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

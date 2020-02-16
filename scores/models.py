@@ -1,3 +1,5 @@
+'''Defines both the Individual score and Total score models'''
+
 from django.db import models
 #a score object holds goals
 from goals.models import Goal

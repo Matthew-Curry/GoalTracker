@@ -1,10 +1,9 @@
-#############Serializers for Accounts App API#################################
+'''Serializers for Accounts App API'''
 #import serializers
 from rest_framework import serializers
 #the custom user model
 from accounts.models import CustomUser
-from rest_framework import serializers
-#for overwriting the rest serializer
+#for overwriting the rest auth serializers
 from rest_auth.serializers import LoginSerializer as RestAuthLoginSerializer
 from rest_auth.registration.serializers import RegisterSerializer
 

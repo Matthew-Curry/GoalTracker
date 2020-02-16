@@ -1,4 +1,5 @@
-#################The signals for the scores app, update the total score when individual scores are updated#####################
+'''The signals for the scores app, update the total score when individual scores are updated'''
+
 #import the post_save signal
 from django.db.models.signals import post_save
 #import involved models

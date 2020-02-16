@@ -1,3 +1,5 @@
+'''The Serializer for the Goal Model'''
+
 #import the goal model
 from goals.models import Goal
 #import serializers

@@ -1,3 +1,5 @@
+'''Defines the Goal model'''
+
 from django.db import models
 #the user model
 from accounts.models import CustomUser

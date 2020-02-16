@@ -1,4 +1,4 @@
-#url paths for the accounts app, connect to signup page
+#NOT SURE IF I AM KEEPING THIS
 from django.urls import path
 
 from .views import SignUpView

@@ -1,3 +1,4 @@
+'''URLs for the Accounts App'''
 #The path function
 from django.urls import path
 #the appropriate view
