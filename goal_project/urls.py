@@ -18,11 +18,25 @@ from django.urls import path, include, re_path
 ##############################################OLD STUFF###################################################################################################
 #from django.views.generic.base import TemplateView #the generic template view for use as the homepage########was for the home page
 #the imports below are for the REST implementation
+
+#where i think this goes:
+
+#there are url paths that lead to a login and signup templates
+
+#there is a catch all template that sends all requests to a basic view that is stored in the core utils.
+#this view uses a template onto which a single page application is mounted, which is where Vue changes to all the other functionality and makes
+#api requests to get what it needs to run
+
+
+
+
 ###########################################################################################################################################################
 from django_registration.backends.one_step.views import RegistrationView
 #the custom user forms
-from accounts.forms import CustomUserCreationForm
-from accounts.forms import CustomUserChangeForm
+from accounts.forms import (CustomUserCreationForm,
+                            CustomUserChangeForm,
+                            CustomRegistrationForm)
+
 from core.views import IndexTemplateView, null_view
 
 
@@ -35,6 +49,19 @@ urlpatterns = [
 
     #path to admin site
     path('admin/', admin.site.urls),
+
+    #path to registration in the browser
+    path("accounts/register/",
+        RegistrationView.as_view(
+            form_class=CustomRegistrationForm,
+            success_url="/",
+        ), name ='django_registration_register'),
+
+    #needed for one step registration
+    path('accounts/', include("django_registration.backends.one_step.urls")),
+
+    #path to the login with the browser
+    path('accounts/', include("django.contrib.auth.urls")),
 
     #the path to the accounts api, runs through accounts api folder, uses UserSerializer in the appropriate view
     path("api/", include("accounts.api.urls")),
@@ -55,12 +82,6 @@ urlpatterns = [
     #Registration via rest
     path("api/rest-auth/registration/", include("rest_auth.registration.urls")), ####linked with a model with username probably
 
-
-##############################################################OLD STUFF#########################################################################################
-    #catch all path for redirects
-    #re_path("^.*$", IndexTemplateView.as_view(), name = 'entry-point')
-    #path('accounts/', include('accounts.urls')), #path to users urls, to access signup page api
-    #path('accounts/', include('django.contrib.auth.urls')), #path to auth api, has views and urls for login and logout
-    #path('', TemplateView.as_view(template_name = 'home.html'), name = 'home'), #url conf for the home page
-    #path('goals/', include('goals.urls'))#path to access goal app urls, the survey page and main app functionality
+    #a catch all url to send all url requests outside the previous set to the SPA
+    re_path("^.*$", IndexTemplateView.as_view(), name = 'entry-point'),
 ]

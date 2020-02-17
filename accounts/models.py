@@ -47,6 +47,7 @@ class CustomUser(AbstractUser):
     #the username field is email
     USERNAME_FIELD = 'email'
     #email is now automatically required as username
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [] 
     #link the new manager to the model through 'objects'
     objects = UserManager()
+    

@@ -54,11 +54,12 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
-    #for crispy forms, webpack loader
-    'crispy_forms',
-    'webpack_loader',
+    #for crispy forms
 
     'django.contrib.sites',
+
+    #to connect to the frontend SPA, webpack loader
+    'webpack_loader',
 
     #Included Apps
     'django.contrib.admin',
@@ -222,3 +223,11 @@ LOGOUT_REDIRECT_URL = '/'
 
 #set the site key to allow for the sites install to work
 SITE_ID = 1
+
+#settings for webpack loader, shows where the file is detailing changes in the frontend
+WEBPACK_LOADER = {
+    'DEFAULT':{
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'frontend', 'webpack-stats.json')
+    }
+}

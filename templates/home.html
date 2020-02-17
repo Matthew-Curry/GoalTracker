@@ -1,12 +1,13 @@
 <!--Home Page Template-->
-{% extends 'base.html' %}
-
-{% block title %}Home Page{%endblock title %}
-
+{%extends "base.html" %}
+{%load render_bundle from webpack_loader%}
 {% block content %}
-{% if user.is_authenticated %}
-Hello {{user.first_name}}
-{%else%}
-<p>You are not logged in</p>
-{% endif %}
-{%endblock content %}
+<h1>A title that stays because this is SPA</h1>
+        <noscript>
+            <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+          </noscript>
+        <div id='app'></div>
+        
+        <!-- built files will be auto injected -->
+        {% render_bundle 'app' %}
+ {% endblock %}

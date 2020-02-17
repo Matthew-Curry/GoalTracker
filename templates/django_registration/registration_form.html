@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Create Your Account</h3>
+<div class = 'registration-form-container'>
+    <form method = 'POST'>
+        {%csrf_token %}
+        {{form}}
+        <button type = 'submit' class = 'btn btn-sm btn-outline-primary'>Creat Account</button>
+    </form> 
+    <p class = "mt-2">Or <a href = "{%url 'login' %}">Login</a></p>
+</div>
+{% endblock %}

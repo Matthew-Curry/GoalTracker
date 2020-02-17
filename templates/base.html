@@ -1,14 +1,21 @@
 <!--Base Template-->
 <!DOCTYPE html>
-<html>
+<html lang = 'en'>
     <head>
         <meta charset="utf-8">
-        <title>GoalTracker</title>
-    </head>
-    <body>
-        <main>
-            {% block content %}
-            {% endblock content %}
-        </main>
-    </body>
-</html>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Goal Tracker</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
+        {% block style %}
+        {%endblock%}
+        </head>
+        <body>
+
+            {%block content%}
+            {%endblock %}
+
+        </body>
+        </html>

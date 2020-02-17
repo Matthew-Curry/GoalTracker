@@ -1,7 +1,8 @@
-'''File to update Admin User Creation and User change forms'''
+'''File including relevant user forms'''
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django_registration.forms import RegistrationForm
 
 from .models import CustomUser
 
@@ -21,3 +22,11 @@ class CustomUserChangeForm(UserChangeForm):
         #the model is the custom model
         model = CustomUser
         fields = ('email', 'password','first_name', 'last_name')
+
+#the custom registation form tied to the custom user model
+class CustomRegistrationForm(RegistrationForm):
+    #the meta class
+    class Meta(RegistrationForm.Meta):
+        model = CustomUser
+
+    

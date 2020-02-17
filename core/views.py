@@ -1,13 +1,13 @@
+'''File that holds the view for the SPA, as well as a view that deals with redirects after registration'''
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
-#imports for the dummy view
-#NOT SURE IF KEEPING/IF TEMPLATE VIEW IS STILL RELEVANT
-
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-#view for the main SPA app (I think)
+
+#view for the main SPA app
 class IndexTemplateView(LoginRequiredMixin, TemplateView):
     #settings
     def get_template_names(self):
