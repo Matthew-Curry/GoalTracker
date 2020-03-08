@@ -1,4 +1,6 @@
 <!--Base Template-->
+{% load static %}
+{% block style %}
 <!DOCTYPE html>
 <html lang = 'en'>
     <head>
@@ -8,10 +10,108 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="{% static 'static.css' %}"> -->
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
-        {% block style %}
-        {%endblock%}
-        </head>
+    </head>
+    <style>
+        html, body{
+            height:100%;
+            font-family:"Playfair Display", serif;
+            background-image:url("")
+        }
+
+        h2{
+            font-size: 100px
+        }
+
+        .reg{
+            background-image: url('{% static "images/sky.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .b1{
+            background-image: url('{% static "images/pexels-photo-3250240.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+
+        .b2{
+            background-image: url('{% static "images/pexels-photo-3464632.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+
+        .b3{
+            background-image: url('{% static "images/pexels-photo-3493777.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+
+        .b4{
+            background-image: url('{% static "images/pexels-photo-3551207.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+
+        .b5{
+            background-image: url('{% static "images/pexels-photo-3575854.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        .b6{
+            background-image: url('{% static "images/pexels-photo-3583201.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        .b7{
+            background-image: url('{% static "images/pexels-photo-3593923.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        .b8{
+            background-image: url('{% static "images/pexels-photo-3609211.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        .b9{
+            background-image: url('{% static "images/pexels-photo-3623207.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        .b10{
+            background-image: url('{% static "images/pexels-photo-3626734.jpeg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } 
+        
+        .auth-box{
+            border: 3px solid lightgrey;
+            border-radius: 10px;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            width: 600px;
+            margin: auto;
+
+        }
+
+        .login-form-container {
+            width:400px;
+            margin:auto;
+        }
+
+        .registration-form-container {
+            width:400px;
+            margin:auto;
+        }
+
+        .outer-area {
+            margin-top: 500px
+
+        }
+    </style>
+    {%endblock%}
+
         <body>
 
             {%block content%}

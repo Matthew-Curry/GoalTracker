@@ -2,13 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h3>Create Your Account</h3>
+<h3 style = "color:white">Create Your Account</h3>
+<body class = reg>
 <div class = 'registration-form-container'>
     <form method = 'POST'>
         {%csrf_token %}
         {{form}}
-        <button type = 'submit' class = 'btn btn-sm btn-outline-primary'>Creat Account</button>
+        <button type = 'submit' class = 'btn btn-default'>Create Account</button>
     </form> 
-    <p class = "mt-2">Or <a href = "{%url 'login' %}">Login</a></p>
+    <p class = "mt-2">Or <a href = "{%url 'login' %}" style = "color:white">Login</a></p>
 </div>
+</body>
 {% endblock %}

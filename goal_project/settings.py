@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 
     #for crispy forms
+    'crispy_forms',
 
     'django.contrib.sites',
 
@@ -150,6 +151,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#for static styling files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'goal_project', 'static')]
+
 #to prevent sending to email server after registration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -219,6 +223,7 @@ REST_AUTH_SERIALIZERS = {'LOGIN_SERIALIZER': 'accounts.api.serializers.CustomLog
 #NEEDS TO BE UPDATES LATER######################################################
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+REDIRECT_FIELD_NAME = '/'
 #################################################################################
 
 #set the site key to allow for the sites install to work
@@ -231,3 +236,6 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'frontend', 'webpack-stats.json')
     }
 }
+
+#sets the url to direct to if not logged in
+LOGIN_URL = '/accounts/login/'

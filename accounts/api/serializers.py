@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     #the meta class
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['id','first_name', 'last_name', 'email']
 
 #The custom serializer for the login api, username set to none
 class CustomLoginSerializer(RestAuthLoginSerializer):

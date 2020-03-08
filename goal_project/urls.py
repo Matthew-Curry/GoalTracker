@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 ##############################################OLD STUFF###################################################################################################
 #from django.views.generic.base import TemplateView #the generic template view for use as the homepage########was for the home page
 #the imports below are for the REST implementation
@@ -85,3 +86,6 @@ urlpatterns = [
     #a catch all url to send all url requests outside the previous set to the SPA
     re_path("^.*$", IndexTemplateView.as_view(), name = 'entry-point'),
 ]
+
+#for static files, styling for the login and logout templates served by django
+urlpatterns +=staticfiles_urlpatterns()

@@ -1,13 +1,47 @@
 <!--Log In Template-->
 {% extends 'base.html' %}
-
-{% block title %}Log In{% endblock title %}
-
+{% load static %}
 {% block content %}
-<h2>Log In</h2>
+<head>
+    <!--jQuery to write function to periodically update the background-->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+</head>
+<div id="#page">
+<body class = "b2">
+<h2 class = "text-center">GoalTracker</h2>
+<div class = "login-form-container">
 <form method = 'post'>
     {% csrf_token %}
     {{form.as_p}}
-    <button type = 'submit'>Log In, this is the template</button>
+    <div class = 'text-center'>
+        <button type = 'submit' class = 'btn btn-sm btn-outline-basic'>Log In</button>
+    </div>
 </form>
+</div>
+    <p class = "mt-2 text-center">Or <a href = "{%url 'django_registration_register' %}">Create an Account</a></p>
+</div>
+
+    <!--JavaScript function to change background every few seconds-->
+<script>
+    window.onload = function () {
+function changeImage() {   
+    //the classes
+    var classes = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'b10'];
+    //randomly generate a number between these, 0 indexed
+    var rand = Math.floor(Math.random() *9)
+    //get the selected class string
+    var class_str = classes[rand]
+    //change the class
+    $("body").toggleClass(class_str);
+}
+window.setInterval(changeImage, 3000);
+}
+</script>
+
+</body>
+
 {% endblock content %}
+
