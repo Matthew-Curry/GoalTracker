@@ -62,11 +62,20 @@ def updateDataBase():
     for user in users:
         makeScores(user)
 
+
+
+###########################################################################
+#FOR EVENTUAL USE ON SERVER
+
 #update the database every day at 12 AM
-schedule.every().day.at('00:00').do(updateDataBase, 'Start of the day')
+#schedule.every().day.at('00:00').do(updateDataBase, 'Start of the day')
 
 #An infinite loop to keep the updates consistent
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+#while True:
+#    schedule.run_pending()
+#    time.sleep(60)
+
+#to update score objects during testing
+updateDataBase()
+
 

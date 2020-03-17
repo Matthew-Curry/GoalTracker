@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-      <router-view />
+    <NavbarComponent v-show = "$route.path != '/survey'"></NavbarComponent>
+    <router-view />
   </div>
 </template>
 
 <script>
 import {apiService} from "@/common/api.service.js"
+import NavbarComponent from "./components/Navbar.vue"
 export default {
   name: "App",
-
-  components: {
-  },
+  components: {NavbarComponent},
   methods:{
   async setUserInfo(){
       const data = await apiService("/api/accounts/");

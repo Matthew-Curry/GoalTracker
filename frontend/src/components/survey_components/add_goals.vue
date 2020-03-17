@@ -6,7 +6,7 @@
         <h1 v-show = 'error2 === true'>Error, make sure you have one goal per category</h1>
     </div>
     <div v-for= "(value, index) in prio_" :key = "value">
-        <button @click = 'setBoolean(index)'>Add Goal for this Category</button>
+        <button @click = 'setBoolean(index)'>Add Goal for {{value}}</button>
         <div v-show = 'booleanList[index]'>
             <label for = 1>Goal:</label>
             <input type = "text" id = 1 v-on:input = "goal = $event.target.value"/>
@@ -16,13 +16,13 @@
             <input type = "text" id = 3 v-on:input = "unit = $event.target.value"/>
             <!--Different Days -->
             <br>
-            <input type="checkbox" name="mon" v-on:input = "mon = $event.target.value">Monday<br />
-            <input type="checkbox" name="tues" v-on:input = "tues = $event.target.value">Tuesday<br/>
-            <input type="checkbox" name="wen" v-on:input = "wen = $event.target.value">Wednesday<br/>
-            <input type="checkbox" name="thurs" v-on:input = "thurs = $event.target.value">Thursday<br/>
-            <input type="checkbox" name="fri" v-on:input = "fri = $event.target.value">Friday<br/>
-            <input type="checkbox" name="sat" v-on:input = "sat = $event.target.value">Saturday<br/>
-            <input type="checkbox" name="sun" v-on:input = "sun = $event.target.value">Sunday<br/>
+            <input type="checkbox" id = 4 v-on:input = "mon = $event.target.value">Monday<br />
+            <input type="checkbox" id = 5 v-on:input = "tues = $event.target.value">Tuesday<br/>
+            <input type="checkbox" id = 6 v-on:input = "wen = $event.target.value">Wednesday<br/>
+            <input type="checkbox" id = 7 v-on:input = "thurs = $event.target.value">Thursday<br/>
+            <input type="checkbox" id = 8 v-on:input = "fri = $event.target.value">Friday<br/>
+            <input type="checkbox" id = 9 v-on:input = "sat = $event.target.value">Saturday<br/>
+            <input type="checkbox" id = 10 v-on:input = "sun = $event.target.value">Sunday<br/>
 
             <button @click = 'setGoalObj(value)'>Click to add Goal</button>
         </div>
@@ -32,9 +32,6 @@
 </template>
 
 <script>
-//goal of this prop:
-
-
 
 export default {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  name: "AddGoals",
     props:{
@@ -129,6 +126,8 @@ export default {                                                                
             //
             //append to the goal list
             this.goal_list.push(goal_obj)
+            //a method to clear the form presented to the user
+            this.clearForm()
             }//otherwise display error message
             else{
                 this.error1 = true;
@@ -168,6 +167,19 @@ export default {                                                                
             //method to send the goals to the main survey function
             sendGoals(){
                 this.$emit('addedGoals', this.goal_list)
+            },
+
+            //a method to clear the form presented to the user
+            clearForm(){
+                var uncheck=document.getElementsByTagName('input');
+                for(var i=0;i<uncheck.length;i++){
+                    if(uncheck[i].type=='checkbox'){
+                        uncheck[i].checked=false;
+                    }//if number or text set blank
+                    else{
+                        uncheck[i].value = '' 
+                    }   
+                }
             }
 
         }

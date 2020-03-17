@@ -1,4 +1,4 @@
-<template >
+<template>
   <div>
     <h1>Survey</h1>
     <div >
@@ -21,9 +21,9 @@
 
 <script>
 //import the used components
-import SelectCategories from '../components/select_categories.vue';
-import AssignPoints from '../components/assign_points.vue';
-import AddGoals from '../components/add_goals.vue';
+import SelectCategories from '../components/survey_components/select_categories.vue';
+import AssignPoints from '../components/survey_components/assign_points.vue';
+import AddGoals from '../components/survey_components/add_goals.vue';
 import {apiService} from "@/common/api.service.js"
 
 export default {
@@ -91,7 +91,7 @@ export default {
             //assign the weight to the goal
             goal_list[i]["weight"] = w;
           }
-
+          
         }
       //assign the goals to the global var
       this.user_goals = goal_list
@@ -112,6 +112,19 @@ export default {
         apiService(endpoint, method, this.user_goals[i])
     }
   }
+  },
+  //when the component is created, check if the user has goals. If they do, send back to home page
+  created() {
+    //if user has goals, send to score today page
+    let endpoint = `/api/goal/list/`;
+    apiService(endpoint).then(data => {
+      //if not empty, move to score today
+      if (data.count != 0) {
+        this.$router.push({
+          name: "ScoreToday"
+        });
+      }
+    });
   }
 };
 </script> 

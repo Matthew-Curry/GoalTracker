@@ -6,11 +6,13 @@
         <h1 style = "font-size: 25px">Distribute 100 points to the priorities based on how important to you they are:</h1>
         <div v-for= "(value, index) in prio_" :key = "value">
         {{value}}
-        <input type = "number" min = "0" onkeypress="return event.charCode >= 48" v-model = "userInput[index]">
+        <input type = "number" min = "0" onkeypress="return event.charCode >= 48" v-model = "inputs">
         </div>
         <button @click = 'checkSubmit'>Submit</button>
     </div>
 </template>
+Tip: Avoid reset buttons in your forms! It is frustrating for users if they click them by mistake.
+
 
 <script>
 //need to have points entered only as integer
@@ -100,3 +102,10 @@ export default {
     }
 }
 </script>
+<style>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+</style>

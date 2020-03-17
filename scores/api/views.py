@@ -32,6 +32,24 @@ class IndividualScoreUpdateView(generics.RetrieveUpdateAPIView):
         total_score_today = TotalScore.objects.filter(date = today)
         #only select scores made by this user today
         return IndividualScore.objects.filter(goal__in=goals, total_score__in= total_score_today)
+
+#a view for retrieving all scores for the user on the current day for the purpose of display
+class IndividualScoreTodayListView(generics.ListAPIView):
+    serializer_class = IndividualScoreSerializer
+    permission_classes = [IsAuthenticated]
+    #the query set are only score that are tied to goals of the user, and are scores created today
+    def get_queryset(self):
+        #the user
+        user = self.request.user
+        #the user's goals
+        goals = list(Goal.objects.filter(user = user))
+        #today's date
+        today = datetime.now()
+        #list of goals created today
+        total_score_today = TotalScore.objects.filter(date = today)
+        #only select scores made by this user today
+        return IndividualScore.objects.filter(goal__in=goals, total_score__in= total_score_today)
+
     
 #the view for retriving all user goals to populate the calender in the main app
 class IndividualScoreListView(generics.ListAPIView):

@@ -6,6 +6,7 @@
             <input type="checkbox" name="goal" value="education" v-model="prio" :disabled="prio.length==3">Education<br />
             <input type="checkbox" name="goal" value="career" v-model="prio" :disabled="prio.length==3">Career<br/>
             <input type="checkbox" name="goal" value="hobby" v-model="prio" :disabled="prio.length==3">Hobby<br/>
+            <button @click = "resetPick">Reset</button>
             <button @click = "submitCat">Submit</button>
     </div>
 </template>
@@ -22,6 +23,12 @@ export default {
         //a method that emits
         submitCat(){
             this.$emit('selectClicked', this.prio)
+        },
+        //a method to reset the choices if the user wants to redo selections
+        resetPick(){
+            while(this.prio.length){
+                this.prio.pop();
+            }
         }
     }
 
