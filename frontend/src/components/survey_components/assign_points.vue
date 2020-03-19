@@ -4,7 +4,7 @@
         <h1 style = "font-size: 27px">Points Left:</h1>
         <p style = "font-size: 22px">{{points_left}}</p>
         <h1 style = "font-size: 25px">Distribute 100 points to the priorities based on how important to you they are:</h1>
-        <div v-for= "(value, index) in prio_" :key = "value">
+        <div v-for= "value in prio_" :key = "value">
         {{value}}
         <input type = "number" min = "0" onkeypress="return event.charCode >= 48" v-model = "inputs">
         </div>

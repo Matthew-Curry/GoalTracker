@@ -64,8 +64,9 @@ class IndividualScoreListView(generics.ListAPIView):
         #only select scores for this user's goals
         return IndividualScore.objects.filter(goal__in = goals)
 
-#A list view of the scores to see all scores accumulated by a user
+#A list view of the scores to see all scores accumulated by a user. Accepts a query paramter for the month filter. In the form of a string "Month YYYY"
 class TotalScoreListView(generics.ListAPIView):
+    print('in the total score')
     serializer_class = TotalScoreSerializer
     permission_classes = [IsAuthenticated]
     #the query set is all scores corosponding to goals set by the user
@@ -78,7 +79,54 @@ class TotalScoreListView(generics.ListAPIView):
         scores_ = IndividualScore.objects.filter(goal__in = goals)
         #use individual scores to get total scores
         total_scores = TotalScore.objects.filter(id__in=scores_.values('total_score_id'))
-        #return the queryset
+        #clean the month param and filter if there
+        month_arg = self.request.query_params.get('month', None)
+        if month_arg is not None:
+            month_filters = self.clean_month(month_arg)
+            month = month_filters[0]
+            year = month_filters[1]
+            #filter by user and month
+            total_scores = TotalScore.objects.filter(id__in=scores_.values('total_score_id'), date__year = year, date__month = month)
+        else:
+            #filter by just user
+            total_scores = TotalScore.objects.filter(id__in=scores_.values('total_score_id'))
+        
         return total_scores
+    
+    #a method that takes the month in the form "Month YYYY and returns a list, month then year"
+    def clean_month(self, month):
+        month_filters = month.split(' ')
+        month_filters[1] = int(month_filters[1])
+        month_str = month_filters[0]
+        if month_str == 'January':
+            month_filters[0] = 1
+        elif month_str == 'February':
+            month_filters[0] = 2
+        elif month_str == 'March':
+            month_filters[0] = 3
+        elif month_str == 'April':
+            month_filters[0] = 4
+        elif month_str == 'May':
+            month_filters[0] = 5
+        elif month_str == 'June':
+            month_filters[0] = 6
+        elif month_str == 'July':
+            month_filters[0] = 7
+        elif month_str == 'August':
+            month_filters[0] = 8
+        elif month_str == 'September':
+            month_filters[0] = 9
+        elif month_str == 'October':
+            month_filters[0] = 10
+        elif month_str == 'November':
+            month_filters[0] = 11
+        elif month_str == 'December':
+            month_filters[0] = 12
+        
+
+        return month_filters
+    
+
+
 
 
