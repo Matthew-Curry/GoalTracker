@@ -10,7 +10,7 @@ function handleResponse(response) {
   }
 }
 
-function apiService(endpoint, method, data) {
+async function apiService(endpoint, method, data) {
   const config = {
     method: method || "GET",
     body: data !== undefined ? JSON.stringify(data) : null,

@@ -11,7 +11,10 @@ from scores.api.views import (IndividualScoreUpdateView,
 #the url patterns
 urlpatterns = [
     path('score/<int:pk>/update/', IndividualScoreUpdateView.as_view(), name = 'update-score-api'),
+    #no params
     path('score/list/', IndividualScoreListView.as_view(), name = 'score-list-api'),
+    #params
+    path('score/list/?<int:id>', IndividualScoreListView.as_view(), name = 'score-list-api'),
     path('score/list/today/', IndividualScoreTodayListView.as_view(), name = 'score-today-list-api'),
     #no params
     path('totalScore/list/', TotalScoreListView.as_view(), name = 'totalScore-list-api'),

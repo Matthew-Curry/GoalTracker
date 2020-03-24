@@ -51,22 +51,26 @@ class IndividualScoreTodayListView(generics.ListAPIView):
         return IndividualScore.objects.filter(goal__in=goals, total_score__in= total_score_today)
 
     
-#the view for retriving all user goals to populate the calender in the main app
+#the view for retriving all user goals. Accepts an optional paramter to allow for viewing goals for a particular total score defined by the passed in primary key of the total score object
 class IndividualScoreListView(generics.ListAPIView):
     serializer_class = IndividualScoreSerializer
     permission_classes = [IsAuthenticated]
     #the query set is all scores corosponding to goals set by the user
     def get_queryset(self):
-        #the user
-        user = self.request.user
-        #the users goals
-        goals = list(Goal.objects.filter(user = user))
+        #filter for total score id if passed in
+        total_score_id = self.request.query_params.get('id', None)
+        if total_score_id is not None:
+            score_list = IndividualScore.objects.filter(total_score = total_score_id)
+        else:
+            #filter by just user
+            user = self.request.user
+            goals = list(Goal.objects.filter(user = user))
+            score_list = IndividualScore.objects.filter(goal__in = goals)
         #only select scores for this user's goals
-        return IndividualScore.objects.filter(goal__in = goals)
+        return score_list
 
 #A list view of the scores to see all scores accumulated by a user. Accepts a query paramter for the month filter. In the form of a string "Month YYYY"
 class TotalScoreListView(generics.ListAPIView):
-    print('in the total score')
     serializer_class = TotalScoreSerializer
     permission_classes = [IsAuthenticated]
     #the query set is all scores corosponding to goals set by the user
