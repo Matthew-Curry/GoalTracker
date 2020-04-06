@@ -30,9 +30,10 @@ from core.utils import (create_user,
                         create_three_goals, 
                         create_three_scores, 
                         create_three_ind_scores, 
-                        single_goal
+                        single_goal,
+                        clean_month,
+                        create_three_ind_scores_same
                         )
-
 
 #test registration through api
 class RegistrationTestCase(APITestCase):
@@ -107,7 +108,7 @@ class GoalCreateTestCase(APITestCase):
         #make a user
         self.CustomUser = create_user('test1@server.com', 'Test', 'User')
         #the data for the goal
-        self.data = {'goal': 'test',
+        self.data = [{'goal': 'test',
                     'measure': 10, 
                     'unit': 'minutes', 
                     'weight':20, 
@@ -118,8 +119,19 @@ class GoalCreateTestCase(APITestCase):
                     'fri': False,
                     'sat': False,
                     'sun': False
-
-                    }
+                    },
+                    {'goal': 'test1',
+                    'measure': 20, 
+                    'unit': 'hours', 
+                    'weight':20, 
+                    'mon': True,
+                    'tues':False,
+                    'wen': False,
+                    'thurs': False,
+                    'fri': False,
+                    'sat': False,
+                    'sun': False
+                    }]
         #authenticate user
         self.api_authentication()
     
@@ -130,18 +142,20 @@ class GoalCreateTestCase(APITestCase):
     #tests that goal has been created, using a valid category
     def test_goal_creation(self):
         #use a valid category with the data
-        self.data['category'] = 'fitness'
-        #the reponse
-        response = self.client.post('/api/goal/create/', self.data)
+        self.data[0]['category'] = 'fitness'
+        self.data[1]['category'] = 'career'
+        response = self.client.post(path = '/api/goal/create/', data = json.dumps(self.data), content_type = 'application/json')
         #test the response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
     
     #tests creating a goal with an invalid category, should return 400 error
     def test_bad_goal_creation(self):
         #use invalid category
-        self.data['category'] = 'invalid'
+        self.data[0]['category'] = 'invalid'
+        self.data[1]['category'] = 'career'
         #the response
-        response = self.client.post('/api/goal/create/', self.data)
+        response = self.client.post(path = '/api/goal/create/', data = self.data, content_type = 'application/json')
         #test the response
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -183,7 +197,6 @@ class GoalListViewTestCase(APITestCase):
         response2 = self.client.get(next_page)
         self.data3 = json.loads(json.dumps(response2.data['results'][0]))
         
-
     #check that a 200 response is returned when the page is requested
     def test_goal_list_request(self):
         #the reponse
@@ -247,81 +260,6 @@ class UpdateGoalTestCase(APITestCase):
         response_data = response2.data
         response_data = json.loads(json.dumps(response.data))
         self.assertEqual(response_data['goal'], 'updated')
-
-    
-
-#test list view of the individual scores
-class IndividualScoreListViewTest(APITestCase):
-    #the setup method, needed to create and login
-    def setUp(self):
-        #make a user
-        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
-        #authenticate user
-        self.api_authentication()
-        #create 3 goals
-        self.goal_list = create_three_goals(self.CustomUser)
-        #create 3 total scores
-        score_list = create_three_scores()
-        #create three individual scores
-        create_three_ind_scores(self.goal_list, score_list)
-        #to hold the data from the list of scores
-        self.data1 = None
-        self.data2 = None
-        self.data3 = None
-        #method to get responses
-        self.gen_response()
-
-    #the autentication method
-    def api_authentication(self):
-        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
-    
-    #stores responses for the list
-    def gen_response(self):
-        response = self.client.get('/api/score/list/')
-        #stores dictionaries for the first two goals
-        self.data1 = json.loads(json.dumps(response.data['results'][0]))
-        self.data2 = json.loads(json.dumps(response.data['results'][1]))
-        #third goal on a new page, new request
-        next_page = response.data['next']
-        response2 = self.client.get(next_page)
-        self.data3 = json.loads(json.dumps(response2.data['results'][0]))
-        
-
-    #check that a 200 response is returned when the page is requested
-    def test_score_list_request(self):
-        #the reponse
-        response = self.client.get('/api/score/list/')
-        #test the response
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
-    #checks that score 1 is returned as it should be
-    def test_goal_list_response1(self):
-        self.assertEqual(self.data1['individual_score'], 10)
-    
-    #checks that score 2 is returned as it should be
-    def test_goal_list_response2(self):
-        self.assertEqual(self.data2['individual_score'], 20)
-    
-    #checks that score 3 is returned as it should be
-    def test_goal_list_response3(self):
-        self.assertEqual(self.data3['individual_score'], 30)
-
-    #check if list view contains score created by a different user
-    def test_list_score_dif_user(self):
-        #make a new user
-        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
-        #create a new goal for this user
-        new_goal = single_goal(new_user)
-        #create a new total score for today
-        new_total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
-        #create an individual score for this user
-        IndividualScore.objects.create(goal = new_goal, individual_score = 10, total_score = new_total_score)
-        #the list view should still contain 3 items
-        response = self.client.get('/api/score/list/')
-        next_page = response.data['next']
-        response2 = self.client.get(next_page)
-        self.assertEqual(len(response2.data['results']), 1)
-
 
 #test list view of the total scores
 class TotalScoreListViewTest(APITestCase):
@@ -387,12 +325,33 @@ class TotalScoreListViewTest(APITestCase):
         new_goal = single_goal(new_user)
         #create a new total score for today
         new_total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
-        #the list view should still contain 3 items
+        IndividualScore.objects.create(goal = new_goal, individual_score = 10, total_score = new_total_score)
+        #the list view should still 3 items, no score for other user
         response = self.client.get('/api/totalScore/list/')
         next_page = response.data['next']
         response2 = self.client.get(next_page)
         self.assertEqual(len(response2.data['results']), 1)
 
+    #test if can pass in month as a parameter as filter
+    def test_month_filter(self):
+        dt1 = datetime.now().replace(day=1)
+        dt2 = dt1 - timedelta(days=1)
+        dt3 = dt2.replace(day=1)
+        new_total_score = TotalScore.objects.create(total_score = 0, date = dt3)
+        new_goal = single_goal(self.CustomUser)
+        IndividualScore.objects.create(goal = new_goal, individual_score = 10, total_score = new_total_score)
+        #create a total score from a previous month
+        dt1 = datetime.now().replace(day=1)
+        dt2 = dt1 - timedelta(days=1)
+        dt3 = dt2.replace(day=1)
+        #get month and year of this previous month
+        year = str(dt3.year)
+        month = clean_month(dt3.month)
+        #get the response
+        url = '/api/totalScore/list/?month=' + month + "+" + year
+        response = self.client.get(url)
+        response_data = json.loads(json.dumps(response.data))
+        self.assertEqual(response_data['count'], 1)
 
 #test update of a score
 class IndividualScoreUpdateTestCase(APITestCase):
@@ -418,25 +377,18 @@ class IndividualScoreUpdateTestCase(APITestCase):
     #check that total score is successfully updated
     def test_update_score(self):
         #the data to update
-        new_data = {'total_score': self.score_list[0], 'individual_score': 10000, 'goal': self.goal_list[0]}
+        new_data = [{'id':1, 'individual_score': 10000}, {'id': 2, 'individual_score': 50}]
         #post to the update endpoint
-        response = self.client.put('/api/score/1/update/', new_data)
-        #now get the goal back
+        response = self.client.patch(path = '/api/score/update/', data = json.dumps(new_data), content_type = 'application/json')
+        #get the goals back, check that score has been updated
         response2 = self.client.get('/api/score/list/')
         response_data = response2.data
-        response_data = json.loads(json.dumps(response.data))
-        self.assertEqual(response_data['individual_score'], 10000)
-    
-    #try to update a score created on a different day
-    def test_update_score_dif_day(self):
-        #add a total score created tommorow
-        total_score_tom = TotalScore.objects.create(total_score = 0, date = datetime.now() + timedelta(days=1))
-        #add an individual score for tomorow
-        ind_score_tom = IndividualScore.objects.create(goal = self.goal_list[0], individual_score = 10, total_score = total_score_tom)
-        #the update view should not have a fourth object
-        new_data = {'total_score': self.score_list[0], 'individual_score': 10000, 'goal': self.goal_list[0]}
-        response = self.client.put('/api/score/4/update/', new_data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response_data = json.loads(json.dumps(response_data))
+        results = response_data['results']
+        result_list = []
+        for res in results:
+            result_list.append(res['individual_score'])
+        self.assertEqual([10000, 50], result_list)
     
     #try to update a score created by a different user
     def test_update_score_dif_user(self):
@@ -449,6 +401,78 @@ class IndividualScoreUpdateTestCase(APITestCase):
         #create an individual score for this user
         IndividualScore.objects.create(goal = new_goal, individual_score = 10, total_score = new_total_score)
         #the update view should not include this score
-        new_data = {'total_score': self.score_list[0], 'individual_score': 10000, 'goal': self.goal_list[0]}
-        response = self.client.put('/api/score/4/update/', new_data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        new_data = [{'individual_score': 10000, 'id': 4}]
+        response = self.client.patch(path = '/api/score/update/', data = json.dumps(new_data), content_type = 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+#test web endpoint used for goals mapped to scores for a passed in total score id
+class GoalToScoreTestCase(APITestCase):
+    #the setup method, needed to create and login
+    def setUp(self):
+        #make a user
+        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
+        #authenticate user
+        self.api_authentication()
+        #create 3 goals for this user
+        self.goal_list = create_three_goals(self.CustomUser)
+        #create a total score
+        self.total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        #create three individual scores
+        create_three_ind_scores_same(self.goal_list, self.total_score)
+        #create 3 goals and 3 scores for a different user
+        self.set_up_another_user()
+        self.api_authentication()
+    
+    #the autentication method
+    def api_authentication(self):
+        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
+
+    #set up another user
+    def set_up_another_user(self):
+        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
+        goal_list = create_three_goals(new_user)
+        total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        score_list = create_three_ind_scores_same(goal_list, total_score)
+
+    #test that the data is what is should be, only this user's goals
+    def test_get_goal_scores(self):
+        response = self.client.get('/api/endpoints/goal-to-scores/?id=1')
+        response_data = json.loads(json.dumps(response.data))
+        expected_data = {'test1': [10, 'minutes'], 'test2': [20, 'hours'], 'test3': [30, 'reps']}
+        self.assertEqual(response_data, expected_data)
+
+#test endpoint that retrieves categoris mapped to a list of goal info and ind scores
+class GoalTodayTestCase(APITestCase):
+    #the setup method, needed to create and login
+    def setUp(self):
+        #make a user
+        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
+        #authenticate user
+        self.api_authentication()
+        #create 3 goals for this user
+        self.goal_list = create_three_goals(self.CustomUser)
+        #create a total score
+        self.total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        #create three individual scores
+        create_three_ind_scores_same(self.goal_list, self.total_score)
+        #create 3 goals and 3 scores for a different user
+        self.set_up_another_user()
+        self.api_authentication()
+    
+    #the autentication method
+    def api_authentication(self):
+        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
+
+    #set up another user
+    def set_up_another_user(self):
+        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
+        goal_list = create_three_goals(new_user)
+        total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        score_list = create_three_ind_scores_same(goal_list, total_score)
+    
+    #test that the results are what they should be, only for the authenticated user
+    def test_score_today(self):
+        response = self.client.get('/api/endpoints/ScoreToday/')
+        response_data = json.loads(json.dumps(response.data))
+        expected_data = {'fitness': [['test1', 10, 'minutes', 10, 1]], 'career':[['test2', 20, 'hours', 10, 2]], 'social': [['test3', 30, 'reps', 10, 3]]}
+        self.assertEqual(response_data, expected_data)

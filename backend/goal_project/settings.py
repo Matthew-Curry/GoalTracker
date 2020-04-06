@@ -9,12 +9,6 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-##########################################################
-#to do 
-#-fix api login, get rid of username field
-
-#############################################################
-
 import os
 
 #The backend foler

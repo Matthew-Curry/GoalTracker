@@ -66,9 +66,9 @@ export default {
       this.add = true
     },
     //method to get the Goals from "add_goals" and then set the weight property and convert all "on" to a boolean value of true
-    getGoals(goal_list){
+    async getGoals(goal_list){
       //iterate over the goal list, add the weight of the goal, and also make all "on" = true for day categories
-      for(var i = 0; i<goal_list.length; i++){
+      for(var i = 0; i<goal_list.length; i++){        
         //a list of all of this goal's keys
         var keys = Object.keys(goal_list[i])
         //make all "on" = true for days, else false
@@ -80,41 +80,37 @@ export default {
           }
         }
         //get the index of the prio array that matches the goal's category
-        var weight_index = '';
           for(var z = 0; z < this.prio.length; z++){
-            //if the values are equal, store the index
-            if(this.prio[z] === goal_list[z]["category"]){
-              weight_index = z
+            //if the values are equal, assign weight
+            if(this.prio[z] === goal_list[i]["category"]){
+              let w = this.userInput[z]
+              goal_list[i]["weight"] = w
             }
-            //use the weight index to get the weight for the goal
-            var w = this.userInput[weight_index]
-            //assign the weight to the goal
-            goal_list[i]["weight"] = w;
           }
-          
         }
       //assign the goals to the global var
       this.user_goals = goal_list
       //to hide the assign prop
       this.add = false;
       //a method to post the now properly formatted goals
-      this.postGoals()
+      await this.postGoals()
+      //redirect
+      this.checkGoals()
     },
     
     //a method to post the goals after they have been properly formated
-    postGoals(){
+    async postGoals(){
       //the endpoint and method to use with the API
       let endpoint = '/api/goal/create/';
       let method = 'POST';
-      //iterate over the goals and post
+      var goal_list = []
       for(var i = 0; i < this.user_goals.length; i++){
-        console.log(this.user_goals[i])
-        apiService(endpoint, method, this.user_goals[i])
-    }
-  }
+        goal_list.push((this.user_goals[i]))
+      }
+      return apiService(endpoint, method, goal_list)
+    
   },
-  //when the component is created, check if the user has goals. If they do, send back to home page
-  created() {
+  checkGoals(){
     //if user has goals, send to score today page
     let endpoint = `/api/goal/list/`;
     apiService(endpoint).then(data => {
@@ -125,6 +121,12 @@ export default {
         });
       }
     });
+  }
+  },
+  //when the component is created, check if the user has goals. If they do, send back to home page
+  created() {
+    //check if user has goals for redirect
+    this.checkGoals();
   }
 };
 </script> 

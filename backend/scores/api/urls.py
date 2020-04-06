@@ -3,21 +3,17 @@
 #the path function
 from django.urls import path
 #import the views tied to scores
-from scores.api.views import (IndividualScoreUpdateView, 
-                            IndividualScoreListView, 
+from scores.api.views import (IndividualScoreUpdateView,  
                             TotalScoreListView,
-                            IndividualScoreTodayListView)
+                            IndividualScoreListView)
 
 #the url patterns
 urlpatterns = [
-    path('score/<int:pk>/update/', IndividualScoreUpdateView.as_view(), name = 'update-score-api'),
-    #no params
-    path('score/list/', IndividualScoreListView.as_view(), name = 'score-list-api'),
-    #params
-    path('score/list/?<int:id>', IndividualScoreListView.as_view(), name = 'score-list-api'),
-    path('score/list/today/', IndividualScoreTodayListView.as_view(), name = 'score-today-list-api'),
+    path('score/update/', IndividualScoreUpdateView.as_view(), name = 'update-score-api'),
     #no params
     path('totalScore/list/', TotalScoreListView.as_view(), name = 'totalScore-list-api'),
     #params
-    path('totalScore/list/?<str:month>', TotalScoreListView.as_view(), name = 'totalScore-list-api')
+    path('totalScore/list/?<str:month>', TotalScoreListView.as_view(), name = 'totalScore-list-api'),
+    #get list of individual scores, used for testing purposes
+    path('score/list/', IndividualScoreListView.as_view(), name = 'score-list-api'),
 ]

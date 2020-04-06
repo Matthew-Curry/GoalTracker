@@ -9,10 +9,12 @@ from rest_framework import serializers
 class GoalSerializer(serializers.ModelSerializer):
     #user is the related field
     user = serializers.StringRelatedField(read_only = True)
+
     #the meta class, tie to the appropriate model
     class Meta:
         model = Goal
         fields = '__all__'
+
     #method to restrict the category to an appropriate value
     def validate_category(self, value):
         #the list of appropriate categories in lowercase

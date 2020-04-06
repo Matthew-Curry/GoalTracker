@@ -1,4 +1,5 @@
-#NOT SURE IF I AM KEEPING THIS
+"""Signup View"""
+
 from django.urls import path
 
 from .views import SignUpView

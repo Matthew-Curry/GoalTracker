@@ -61,7 +61,7 @@ export default {
       var month = arg["view"]["title"];
       month = month.split(" ");
       //if you already rendered goals for this month, do not connect to the api
-      if (this.months.indexOf(month[0]) === -1) {
+      if (this.months.indexOf(month[0]) === -1){
         //build the url, mark month to prevent another rerender, get total scores
         let endpoint =
           `/api/totalScore/list/?month=` + month[0] + "+" + month[1];
@@ -85,12 +85,23 @@ export default {
               //the components of the list
               var total_score = results[i]["total_score"];
               var date = results[i]["date"];
+              //determine the event color
+              var event_color;
+              if(total_score < 50){
+                event_color = 'red'
+              }else if(total_score < 80){
+                event_color = 'yellow'
+              }else{
+                event_color = 'green'
+              }
               //the event object for this score
               var event_obj = {
                 id: id,
                 allDay: true,
                 start: date,
-                title: total_score
+                title: total_score,
+                backgroundColor: event_color,
+                borderColor: 'black'
               };
               //append to the list of events
               this.EVENTS.push(event_obj);

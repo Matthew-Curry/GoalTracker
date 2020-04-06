@@ -16,23 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-##############################################OLD STUFF###################################################################################################
-#from django.views.generic.base import TemplateView #the generic template view for use as the homepage########was for the home page
-#the imports below are for the REST implementation
 
-#where i think this goes:
-
-#there are url paths that lead to a login and signup templates
-
-#there is a catch all template that sends all requests to a basic view that is stored in the core utils.
-#this view uses a template onto which a single page application is mounted, which is where Vue changes to all the other functionality and makes
-#api requests to get what it needs to run
-
-
-
-
-###########################################################################################################################################################
 from django_registration.backends.one_step.views import RegistrationView
+
 #the custom user forms
 from accounts.forms import (CustomUserCreationForm,
                             CustomUserChangeForm,
@@ -73,15 +59,17 @@ urlpatterns = [
     #the path to the score api, runs through score api foler, uses the total score and individual score serializers in appropriate view
     path('api/', include('scores.api.urls')),
 
+    #the web apir endpoint, not configured as an app
+    path("api/", include("web_endpoints.urls")),
+
     #Login Through Browsable API
     path("api-auth/", include("rest_framework.urls")), #login is now option in API
 
     #Login Through REST 
-    path("api/rest-auth/", include("rest_auth.urls")), #/login/ to get to the login API MAKE CUSTOM USER MODEL, IS ASKING FOR USERNAME #could overwrite serializer
-    #to solve this problem, couuld be serializer, view, form
+    path("api/rest-auth/", include("rest_auth.urls")), 
 
     #Registration via rest
-    path("api/rest-auth/registration/", include("rest_auth.registration.urls")), ####linked with a model with username probably
+    path("api/rest-auth/registration/", include("rest_auth.registration.urls")),
 
     #a catch all url to send all url requests outside the previous set to the SPA
     re_path("^.*$", IndexTemplateView.as_view(), name = 'entry-point'),
