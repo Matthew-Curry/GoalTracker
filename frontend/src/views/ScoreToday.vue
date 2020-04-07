@@ -36,8 +36,6 @@ export default {
       countInput: 0,
       //boolean for whether or not submit button has been pressed
       submitClicked: false,
-      //a boolean for whether or not to display an error for no input for a goal
-      noInputError: false,
       //HOLD ALL USER INPUT
       holdAllInput: {}
     };
@@ -82,50 +80,33 @@ export default {
     toggleClicked() {
       //if errors are currently displayed, get rid of them
       this.greaterThanMax = false;
-      this.noInputError = false;
       //set submit clicked to true to cause component to send in data
       this.submitClicked = true;
     },
-    
+
     //a method to check input. Verfies that all goals have a non zero score, caps score at max amount
-    checkInput(userInput, numGoals) {
+    checkInput(userInput) {
       //list of score keys
       var score_keys = Object.keys(userInput);
-      //show error if no goals
-      if (numGoals === 0) {
-        this.noInputError = true;
-      } //else go through goals
-      else {
-        //check if there is no input for a goal, or that the value inputted is greater than the max
-        for (var i = 0; i < score_keys.length; i++) {
-          //get the value
-          var val = userInput[score_keys[i]][0];
-          //if value is 0, raise error and break
-          if (val === 0) {
-            this.noInputError = true;
-            break;
-          }
-          //get the max
-          var max = userInput[score_keys[i]][1];
-          //if val is greater than max, change val to max
-          if (val > max) {
-            userInput[score_keys[i]][0] = max;
-            break;
-          }
-        }
-        //if all goals are inputted, append userInput to overall input of scores and call method to submit
-        if (this.noInputError === false) {
-          this.countInput = this.countInput + 1;
-          //this.holdAllInput.push(userInput)
-          this.holdAllInput = { ...this.holdAllInput, ...userInput };
-          this.submitScores();
-        }
-        //otherwise reset submit clicked so user can try again
-        else {
-          //once input is checked, toggle variable that check has been performed to false
-          this.submitClicked = false;
+      //check if there is no input for a goal, or that the value inputted is greater than the max
+      for (var i = 0; i < score_keys.length; i++) {
+        //get the value
+        var val = userInput[score_keys[i]][0];
+        //get the max
+        var max = userInput[score_keys[i]][1];
+        //if val is greater than max, change val to max
+        if (val > max) {
+          userInput[score_keys[i]][0] = max;
+          break;
         }
       }
+      //if all goals are inputted, append userInput to overall input of scores and call method to submit
+      this.countInput = this.countInput + 1;
+      //this.holdAllInput.push(userInput)
+      this.holdAllInput = { ...this.holdAllInput, ...userInput };
+      this.submitScores();
+      //toggle variable that check has been performed to false
+      this.submitClicked = false;
     },
 
     //a method that checks that all goals_in_category components have submitted scores, and if so submits
@@ -146,12 +127,12 @@ export default {
         let endpoint = `/api/score/update/`;
         let method = "PATCH";
         //wait for the post to process
-        const waitAPI = async() => {
-        await apiService(endpoint, method, list_);
-      }
-      waitAPI();
-      //after all updates, refresh the page
-      window.location.reload();
+        const waitAPI = async () => {
+          await apiService(endpoint, method, list_);
+        };
+        waitAPI();
+        //after all updates, refresh the page
+        window.location.reload();
       }
     }
   }

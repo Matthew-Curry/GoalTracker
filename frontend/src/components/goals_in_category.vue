@@ -49,10 +49,8 @@ export default {
   watch: {
     submit_checked: function() {
       if (this.submit_checked === true) {
-        //send in the number of goals so it can check if no goals were set
-        var numGoals = Object.keys(this.userInput).length;
         setTimeout(() => {
-          this.$emit("submitToReview", this.userInput, numGoals);
+          this.$emit("submitToReview", this.userInput);
         }, Math.random() * 1000);
       }
     }
