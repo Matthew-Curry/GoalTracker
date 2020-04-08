@@ -59,8 +59,11 @@ urlpatterns = [
     #the path to the score api, runs through score api foler, uses the total score and individual score serializers in appropriate view
     path('api/', include('scores.api.urls')),
 
-    #the web apir endpoint, not configured as an app
+    #the web api endpoint, not configured as an app
     path("api/", include("web_endpoints.urls")),
+
+    #analytics endpoints
+    path("api/", include("analytics_endpoints.urls")),
 
     #Login Through Browsable API
     path("api-auth/", include("rest_framework.urls")), #login is now option in API
