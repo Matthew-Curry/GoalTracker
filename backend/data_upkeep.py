@@ -24,6 +24,7 @@ def makeScores(user_):
     day = datetime.datetime.now(tz = timezone('US/Eastern')).weekday()
     #current date
     today = datetime.datetime.now(tz = timezone('US/Eastern'))
+    print('today is of type')
     #the queryset holding all goals for the day
     query_set = None
     #variable that will hold the total score today

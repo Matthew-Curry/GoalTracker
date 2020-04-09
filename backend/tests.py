@@ -476,3 +476,134 @@ class GoalTodayTestCase(APITestCase):
         response_data = json.loads(json.dumps(response.data))
         expected_data = {'fitness': [['test1', 10, 'minutes', 10, 1]], 'career':[['test2', 20, 'hours', 10, 2]], 'social': [['test3', 30, 'reps', 10, 3]]}
         self.assertEqual(response_data, expected_data)
+    
+#test case for the timeChart
+class TimeChartTestCase(APITestCase):
+    #the setup method, needed to create and login
+    def setUp(self):
+        #make a user
+        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
+        #authenticate user
+        self.api_authentication()
+        #create 3 goals for this user
+        self.goal_list = create_three_goals(self.CustomUser)
+        #create a week of total scores
+        self.make_week_of_scores(self.CustomUser, 20)
+        # set up another user with a week of scores and goals
+        self.set_up_another_user()
+    
+    # method to make a week worth of total scores. Takes user and the score to assign to all goals
+    def make_week_of_scores(self, user, score):
+        # get user goals
+        goals = Goal.objects.filter(user = user)
+        # the past week
+        first_day = datetime.now() - timedelta(days=7)
+        past_week = [first_day + timedelta(days=i) for i in range(7)]
+        # iterate over and make scores
+        for day in past_week:
+            total_score = TotalScore.objects.create(total_score = 0, date = day)
+            # iterate over goals and add scores
+            for goal in goals:
+                IndividualScore.objects.create(goal = goal, total_score = total_score, individual_score = score)
+
+    #the autentication method
+    def api_authentication(self):
+        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
+    
+    #set up another user
+    def set_up_another_user(self):
+        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
+        goal_list = create_three_goals(new_user)
+        # set the user up with scores for the past week, but user a different score
+        self.make_week_of_scores(new_user, 10)
+
+    # the test, connect to the endpoint and verify that the data is for the logged in user
+    def test_time_chart_data(self):
+        response = self.client.get('/api/analytics/timeChart/')
+        response_data = json.loads(json.dumps(obj = response.data, default = str))
+        expected_data = {'fitness': [200, 200, 200, 200, 200, 200, 200],
+                            'career': [200, 200, 200, 200, 200, 200, 200],
+                            'social': [200, 200, 200, 200, 200, 200, 200],
+                            'days': ['2020-04-02', '2020-04-03', '2020-04-04', '2020-04-05', '2020-04-06', '2020-04-07', '2020-04-08']}
+        self.assertEqual(response_data, expected_data)
+
+#test case for the pie chart
+class PieChartTestCase(APITestCase):
+    #the setup method, needed to create and login
+    def setUp(self):
+        #make a user
+        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
+        #authenticate user
+        self.api_authentication()
+        #create 3 goals for this user
+        self.goal_list = create_three_goals(self.CustomUser)
+        #create a total score
+        self.total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        #create three individual scores
+        create_three_ind_scores_same(self.goal_list, self.total_score)
+        
+        self.set_up_another_user()
+
+    #the autentication method
+    def api_authentication(self):
+        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
+    
+    #set up another user
+    def set_up_another_user(self):
+        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
+        goal_list = create_three_goals(new_user)
+        total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        score_list = create_three_ind_scores_same(goal_list, total_score)
+
+    # the test, connect to the endpoint and verify that the data is for the logged in user
+    def test_pie_chart_data(self):
+        response = self.client.get('/api/analytics/pieChart/')
+        response_data = json.loads(json.dumps(response.data))
+        expected_data = {'current': {'fitness': 100, 'career': 100, 'social': 100}, 
+                        'past_week': {'fitness': 0.16666666666666666, 'career': 0.3333333333333333, 'social': 0.5}, 
+                        'past_30': {'fitness': 0.16666666666666666, 'career': 0.3333333333333333, 'social': 0.5}, 
+                        'past_60': {'fitness': 0.16666666666666666, 'career': 0.3333333333333333, 'social': 0.5}, 
+                        'past_90': {'fitness': 0.16666666666666666, 'career': 0.3333333333333333, 'social': 0.5}, 
+                        'since_start': {'fitness': 0.16666666666666666, 'career': 0.3333333333333333, 'social': 0.5}}
+        self.assertEqual(response_data, expected_data)
+
+#test case for the probablities
+class ProbTestCase(APITestCase):
+    #the setup method, needed to create and login
+    def setUp(self):
+        #make a user
+        self.CustomUser = create_user('test1@server.com', 'Test', 'User')
+        #authenticate user
+        self.api_authentication()
+        #create 3 goals for this user
+        self.goal_list = create_three_goals(self.CustomUser)
+        #create a total score
+        self.total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        #create three individual scores
+        create_three_ind_scores_same(self.goal_list, self.total_score)
+        
+        self.set_up_another_user()
+
+    #the autentication method
+    def api_authentication(self):
+        self.client.login(email = 'test1@server.com', password = 'a-very-strong-password')
+    
+    #set up another user
+    def set_up_another_user(self):
+        new_user = create_user('new_email@server.com', 'test2_first', 'test2_last')
+        goal_list = create_three_goals(new_user)
+        total_score = TotalScore.objects.create(total_score = 0, date = datetime.now())
+        score_list = create_three_ind_scores_same(goal_list, total_score)
+
+    # the test, connect to the endpoint and verify that the data is for the logged in user
+    def test_prob_data(self):
+        response = self.client.get('/api/analytics/probs/')
+        response_data = json.loads(json.dumps(response.data))
+        
+        expected_data = {'dayMost': [100, 'Thursday'], 
+                        'dayLeast': [0, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday'], 
+                        'catMost': [300, 'social'], 
+                        'catLeast': [100, 'fitness']}
+        self.assertEqual(response_data, expected_data)
+
+        

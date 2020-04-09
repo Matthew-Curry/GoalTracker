@@ -91,7 +91,6 @@ class PieChartView(APIView):
             
         # iterate over and divide by overall sum
         new_overall = sum(list(response.values()))
-        print(new_overall)
         for cat in cat_list:
             response[cat] = float(response[cat]/new_overall)
 
@@ -125,19 +124,16 @@ class PieChartView(APIView):
         
 class ProbView(APIView):
     """A view for returning the probilities associted with the liklihood of a user completing a goal on the most and least likely
-        says and categories
+        days and categories
         
         Probabilities are proxied as (number of points scored on day/number of points possible to score"""
 
     def get(self, request):
-
         # the results of min and max prob by day
         day_response = self.day_results(request.user)
-        print(day_response)
 
         # the result of min and max prob by category
         cat_response = self.cat_results(request.user)
-        print(cat_response)
 
         # merge the two for the response
         day_response.update(cat_response)
