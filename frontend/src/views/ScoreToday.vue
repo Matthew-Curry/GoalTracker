@@ -12,7 +12,6 @@
       </div>
       <button @click="toggleClicked">Submit Scores</button>
     </div>
-    <h1 v-if="noInputError">There is no input for a goal</h1>
   </div>
 </template>
 

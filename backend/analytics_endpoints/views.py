@@ -13,6 +13,10 @@ from rest_framework.response import Response
 #for getting score information for the current day
 from datetime import datetime, timedelta
 
+
+#temp for test
+import random
+
 class TimeChartView(APIView):
     """View for the time series chart. Returns days and weighted scores by category for each day"""
     
@@ -28,6 +32,7 @@ class TimeChartView(APIView):
         #the response with empty list as values
         response = {k:[] for k in cat_list}
         response['days'] = date_list
+
         #iterate over days and get weighted score for each day and category combo and append
         for day in date_list:
             for cat in cat_list:
